@@ -1,0 +1,35 @@
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+    name: allow-ns1-pvc
+    namespace: default
+spec:
+    from:
+        - group: ""
+          kind: PersistentVolumeClaim
+          namespace: ns1
+    to:
+        - group: snapshot.storage.k8s.io
+          kind: VolumeSnapshot
+          name: new-snapshot-demo
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: foo-pvc
+    namespace: ns1
+spec:
+    storageClassName: example
+    accessModes:
+        - ReadWriteOnce
+    resources:
+        requests:
+            storage: 1Gi
+    dataSourceRef:
+        apiGroup: snapshot.storage.k8s.io
+        kind: VolumeSnapshot
+        name: new-snapshot-demo
+        namespace: default
+    volumeMode: Filesystem
