@@ -1,0 +1,21 @@
+---
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+    - pluginConfig:
+          - args:
+                scoringStrategy:
+                    resources:
+                        - name: intel.com/foo
+                          weight: 3
+                        - name: intel.com/bar
+                          weight: 3
+                    requestedToCapacityRatio:
+                        shape:
+                            - utilization: 0
+                              score: 0
+                            - utilization: 100
+                              score: 10
+                    type: RequestedToCapacityRatio
+            name: NodeResourcesFit
+            
